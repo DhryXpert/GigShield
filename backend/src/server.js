@@ -46,6 +46,9 @@ app.get('/', (req, res) => {
 // ── Auth Routes ──
 app.use('/api/auth', require('./routes/authRoutes'));
 
+// ── Rider Routes ──
+app.use('/api/riders', require('./routes/riderRoutes'));
+
 // ── Zone routes (public for now) ──
 const { Zone } = require('./models');
 

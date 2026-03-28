@@ -34,12 +34,12 @@ const riderSchema = new mongoose.Schema(
       type: String,
       enum: ['Delhi', 'Mumbai', 'Bengaluru', 'Gurugram', 'Noida', 'Hyderabad', 'Pune', 'Chennai'],
     },
-    // Income Stability Score (300–900)
+    // Income Stability Score (0–100)
     issScore: {
       type: Number,
-      default: 550,
-      min: 300,
-      max: 900,
+      default: 75,
+      min: 0,
+      max: 100,
     },
     issFactors: {
       activeHoursPerWeek: { type: Number, default: 35 },     // avg hours worked
