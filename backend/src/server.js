@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 
 dotenv.config();
@@ -13,10 +14,11 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:3001', process.env.FRONTEND_URL],
   credentials: true,
 }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 
 // Health check
@@ -36,9 +38,13 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/api/health',
       zones: '/api/zones',
+      auth: '/api/auth/send-otp'
     },
   });
 });
+
+// ── Auth Routes ──
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // ── Zone routes (public for now) ──
 const { Zone } = require('./models');

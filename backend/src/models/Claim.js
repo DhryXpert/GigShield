@@ -103,7 +103,6 @@ const claimSchema = new mongoose.Schema(
 claimSchema.index({ rider: 1, createdAt: -1 });
 claimSchema.index({ policy: 1 });
 claimSchema.index({ status: 1 });
-claimSchema.index({ triggerHash: 1 });
 claimSchema.index({ anomalyScore: -1 });
 
 module.exports = mongoose.model('Claim', claimSchema);
