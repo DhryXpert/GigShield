@@ -1,0 +1,334 @@
+@import "tailwindcss";
+
+/* ======================================================
+   AI GIGSHIELD — DESIGN SYSTEM
+   Premium dark-mode-first design tokens & utilities
+   ====================================================== */
+
+:root {
+  /* Brand Colors */
+  --gs-primary: #6C5CE7;
+  --gs-primary-light: #A29BFE;
+  --gs-primary-dark: #4834D4;
+  --gs-accent: #00CEC9;
+  --gs-accent-light: #55EFC4;
+  --gs-accent-dark: #00B894;
+
+  /* Status Colors */
+  --gs-success: #00B894;
+  --gs-warning: #FDCB6E;
+  --gs-danger: #FF7675;
+  --gs-info: #74B9FF;
+
+  /* Risk Tier Colors */
+  --gs-risk-low: #00B894;
+  --gs-risk-medium: #FDCB6E;
+  --gs-risk-high: #FF7675;
+  --gs-risk-critical: #D63031;
+
+  /* Dark Theme */
+  --gs-bg-primary: #0B0D17;
+  --gs-bg-secondary: #111427;
+  --gs-bg-card: #161A2E;
+  --gs-bg-card-hover: #1C2040;
+  --gs-bg-elevated: #1E2245;
+  --gs-border: rgba(108, 92, 231, 0.15);
+  --gs-border-hover: rgba(108, 92, 231, 0.35);
+
+  /* Text */
+  --gs-text-primary: #F0F0F5;
+  --gs-text-secondary: #9CA3C0;
+  --gs-text-muted: #5F6589;
+
+  /* Gradients */
+  --gs-gradient-primary: linear-gradient(135deg, #6C5CE7, #00CEC9);
+  --gs-gradient-hero: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 30%, #00CEC9 70%, #55EFC4 100%);
+  --gs-gradient-card: linear-gradient(145deg, rgba(108, 92, 231, 0.08), rgba(0, 206, 201, 0.05));
+  --gs-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+
+  /* Shadows */
+  --gs-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --gs-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --gs-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --gs-shadow-glow: 0 0 30px rgba(108, 92, 231, 0.2);
+  --gs-shadow-glow-accent: 0 0 30px rgba(0, 206, 201, 0.15);
+
+  /* Spacing */
+  --gs-radius-sm: 8px;
+  --gs-radius-md: 12px;
+  --gs-radius-lg: 16px;
+  --gs-radius-xl: 24px;
+  --gs-radius-full: 9999px;
+
+  /* Transitions */
+  --gs-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --gs-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --gs-transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@theme inline {
+  --color-background: var(--gs-bg-primary);
+  --color-foreground: var(--gs-text-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ======================================================
+   BASE STYLES
+   ====================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--gs-bg-primary);
+  color: var(--gs-text-primary);
+  font-family: var(--font-sans, 'Inter', 'Segoe UI', sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(108, 92, 231, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(108, 92, 231, 0.4); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ======================================================
+   UTILITY CLASSES
+   ====================================================== */
+
+.gs-animate-float { animation: float 6s ease-in-out infinite; }
+.gs-animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.gs-animate-gradient { 
+  background-size: 200% 200%; 
+  animation: gradient-shift 4s ease infinite; 
+}
+.gs-animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+.gs-animate-scale-in { animation: scale-in 0.4s ease-out forwards; }
+
+/* Stagger delays */
+.gs-delay-1 { animation-delay: 0.1s; }
+.gs-delay-2 { animation-delay: 0.2s; }
+.gs-delay-3 { animation-delay: 0.3s; }
+.gs-delay-4 { animation-delay: 0.4s; }
+.gs-delay-5 { animation-delay: 0.5s; }
+
+/* Glass card */
+.gs-glass {
+  background: var(--gs-gradient-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--gs-border);
+  border-radius: var(--gs-radius-lg);
+}
+
+.gs-glass:hover {
+  border-color: var(--gs-border-hover);
+  box-shadow: var(--gs-shadow-glow);
+}
+
+/* Card base */
+.gs-card {
+  background: var(--gs-bg-card);
+  border: 1px solid var(--gs-border);
+  border-radius: var(--gs-radius-lg);
+  transition: var(--gs-transition);
+}
+
+.gs-card:hover {
+  background: var(--gs-bg-card-hover);
+  border-color: var(--gs-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--gs-shadow-md);
+}
+
+/* Gradient text */
+.gs-gradient-text {
+  background: var(--gs-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Primary button */
+.gs-btn-primary {
+  background: var(--gs-gradient-primary);
+  color: white;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: var(--gs-radius-full);
+  border: none;
+  cursor: pointer;
+  transition: var(--gs-transition);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.gs-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+}
+
+.gs-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary button */
+.gs-btn-secondary {
+  background: transparent;
+  color: var(--gs-text-primary);
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: var(--gs-radius-full);
+  border: 1px solid var(--gs-border-hover);
+  cursor: pointer;
+  transition: var(--gs-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.gs-btn-secondary:hover {
+  background: var(--gs-bg-card);
+  border-color: var(--gs-primary);
+  transform: translateY(-2px);
+}
+
+/* Badge */
+.gs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--gs-radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.gs-badge-primary {
+  background: rgba(108, 92, 231, 0.15);
+  color: var(--gs-primary-light);
+  border: 1px solid rgba(108, 92, 231, 0.25);
+}
+
+.gs-badge-success {
+  background: rgba(0, 184, 148, 0.15);
+  color: var(--gs-success);
+  border: 1px solid rgba(0, 184, 148, 0.25);
+}
+
+.gs-badge-warning {
+  background: rgba(253, 203, 110, 0.15);
+  color: var(--gs-warning);
+  border: 1px solid rgba(253, 203, 110, 0.25);
+}
+
+.gs-badge-danger {
+  background: rgba(255, 118, 117, 0.15);
+  color: var(--gs-danger);
+  border: 1px solid rgba(255, 118, 117, 0.25);
+}
+
+/* Section */
+.gs-section {
+  padding: 80px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Divider glow */
+.gs-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gs-primary), var(--gs-accent), transparent);
+  border: none;
+  opacity: 0.3;
+}
+
+/* ======================================================
+   SCROLLBAR
+   ====================================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gs-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gs-primary-dark);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gs-primary);
+}
+
+/* ======================================================
+   SELECTION
+   ====================================================== */
+
+::selection {
+  background: rgba(108, 92, 231, 0.3);
+  color: white;
+}
