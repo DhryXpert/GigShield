@@ -85,7 +85,6 @@ const riderSchema = new mongoose.Schema(
 );
 
 // Indexes for query performance
-riderSchema.index({ phone: 1 });
 riderSchema.index({ zone: 1 });
 riderSchema.index({ city: 1 });
 riderSchema.index({ isActive: 1 });

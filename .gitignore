@@ -6,10 +6,12 @@ __pycache__/
 venv/
 env/
 
-# Environment
 .env
 .env.local
 .env.production
+.env.development
+.env.*.local
+!.env.example
 
 # Build
 .next/

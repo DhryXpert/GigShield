@@ -49,6 +49,10 @@ app.use('/api/auth', require('./routes/authRoutes'));
 // ── Rider Routes ──
 app.use('/api/riders', require('./routes/riderRoutes'));
 
+// ── Policy & Claim Routes ──
+app.use('/api/policies', require('./routes/policyRoutes'));
+app.use('/api/claims', require('./routes/claimRoutes'));
+
 // ── Zone routes (public for now) ──
 const { Zone } = require('./models');
 
