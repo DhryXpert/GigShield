@@ -1,54 +1,70 @@
 # AI GigShield 🚀
 
-An AI-powered parametric insurance platform that predicts, prevents, and automatically protects gig workers (delivery partners) from income loss due to external disruptions (rain, traffic, curfews).
+![Banner](https://raw.githubusercontent.com/DhryXpert/GigShield/main/frontend/public/banner.png)
 
-## Overview
-Built to ensure daily earners never face zero-income days from events completely out of their control. By combining an **Income Stability Score (ISS)**, **Behavioral Fraud Detection**, and **Parametric Auto-Claims** tied to Weather APIs, GigShield ensures gig workers get paid instantly via UPI when disaster hits.
+An AI-powered parametric insurance platform that predicts, prevents, and automatically protects gig workers from income loss due to external disruptions (rain, traffic, curfews).
 
-## 🏆 Key Features Demonstrated
-1. **Rider Onboarding & Risk Profiling:** Captures target earnings and preferred zone.
-2. **AI Dynamic Premium Engine:** Calculates exactly what a rider should pay based on their ISS (0-100) and Zone Risk Multiplier.
-3. **Weekly Shield Coverage:** Allows the purchase of fixed weekly micro-policies.
-4. **Parametric Claims & Fraud Filter:** Features a "Simulate Event" button that immediately verifies active policies in the affected zone, clears fraud logs, and auto-generates a payout instantly without human intervention.
+## 💡 Inspiration
+India has **2M+ gig delivery workers**. A single monsoon afternoon can wipe out a Blinkit rider's entire day of earnings—instantly, with zero fallback. Traditional insurance doesn't work for daily earners: monthly premiums, 15-30 day claim settlements, and manual paperwork make it completely irrelevant for someone who needs money the same day they lose it.
 
-## 🛠️ Built With
-- **Frontend:** Next.js 14, TailwindCSS, React 18, Framer Motion
+**AI GigShield** was inspired by a simple question: *What if protection was automatic, instant, and built around how gig workers actually earn?*
+
+## ✨ What It Does
+AI GigShield is a parametric income protection platform for Blinkit's last-mile delivery partners.
+- **Real-time AI Risk Engine:** Monitors weather, traffic, and order density every 10 minutes across delivery zones.
+- **Dynamic Weekly Pricing:** Income Stability Score (ISS) dynamically prices a rider's weekly premium (₹20-₹45) based on their individual risk profile.
+- **Parametric Auto-Trigger:** Claims fire the moment disruption thresholds are breached — no claim form, no call center.
+- **Behavioral Fraud Detection:** Validates claims using GPS behavior and multi-API weather cross-verification.
+- **Instant UPI Payouts:** Credited to the rider within 5 minutes of a verified disruption.
+
+## 🏗️ How We Built It
+The platform consists of four intelligent layers:
+1. **Predict:** XGBoost ML model trained on disruption + earnings correlation data, refreshed every 30 minutes via OpenWeather and Google Maps APIs.
+2. **Price:** Dynamic weekly premium calculation using ISS score, zone flood history, and IMD forecasts.
+3. **Trigger:** Parametric logic that fires automatically when rain > 40mm, order density drops > 50%, or temperature exceeds 42°C.
+4. **Pay:** Razorpay Payout logic (Mocked) verifies and transfers funds post-fraud validation.
+
+**Tech Stack:**
+- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion
 - **Backend:** Node.js, Express.js, Mongoose
 - **Database:** MongoDB Atlas
+- **Security:** JWT (HttpOnly Cookies), CSRF Protection
+
+## 🛡️ Fraud Detection Engine
+To scale parametric insurance, we built a robust fraud detection system:
+- **Location Cross-Check:** Verifies the rider was actually active in the storm zone during the event.
+- **GPS Spoofing AI:** Detects anomalous movement patterns often used to trick delivery apps.
+- **Community Validation:** Cross-references inactivity across 50+ riders in the same zone to confirm localized disruption.
+
+## 🚀 Challenges We Faced
+- **Modeling Rainfall Impact:** Determining the exact point where "it's raining" becomes "it's impossible to deliver" required analyzing historical order drop-off across different Indian cities.
+- **Fraud Robustness:** Designing a system that catches "fake inactivity" without creating false positives that block legitimate claims.
+- **Unit Economics:** Structuring the pricing on a weekly cycle to match Blinkit's payment cadence—most insurance models are built around monthly/annual billing.
+
+## 🔮 Future Roadmap
+- **Live Integration with IMD:** Direct alerts from India Meteorological Department for better predictive accuracy.
+- **Predictive Shift Alerts:** "Heavy rain in Sector 62 in 45 mins — move to Sector 50 for 3x lower disruption risk."
+- **Expansion:** Scaling to Swiggy Instamart, Zepto, and Porter delivery partners.
 
 ---
 
-## 💻 How to Build & Run Locally (Judges Guide)
-
-### Prerequisites
-Make sure you have `node.js` installed. You will need 2 terminal windows.
+## 💻 Setup & Installation
 
 ### 1. Backend Setup
-1. CD into the backend `cd backend`
-2. Run `npm install`
-3. Duplicate `.env.example` and rename it to `.env`. Add your MongoDB Atlas connection URL!
-4. **Crucial Step:** Run the database seeder to populate the delivery zones!
-   ```bash
-   node src/scripts/seed.js
-   ```
-5. Start the server:
-   ```bash
-   npm run dev
-   ```
+```bash
+cd backend
+npm install
+cp .env.example .env # Add your MongoDB Atlas URI
+node src/scripts/seed.js # Required to populate delivery zones
+npm run dev
+```
 
 ### 2. Frontend Setup
-1. In your second terminal, CD into the frontend `cd frontend`
-2. Run `npm install`
-3. Start the Next.js app:
-   ```bash
-   npm run dev
-   ```
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### 3. Usage & Testing 
-1. Open `http://localhost:3000` in your browser.
-2. Log in with a random phone number (e.g. `8888888888`) and the magic OTP `123456`.
-3. Complete your profile onboarding by selecting a City and Delivery Zone (e.g., *Bengaluru* -> *Koramangala*).
-4. On the Dashboard, click **Generate Custom Premium**. AI calculates a custom policy price.
-5. Pay/Activate the policy.
-6. Look at the **Judge Panel** block! Click **TRIGGER HEAVY RAIN**.
-7. Watch the parametric engine bypass all manual handlers, instantly verify fraud bounds, and payout.
+---
+**GigShield** — Ensuring that a rainy day never means a hungry day. 🛡️🌧️

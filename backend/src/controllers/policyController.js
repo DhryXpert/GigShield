@@ -1,4 +1,4 @@
-const { Policy, Rider, Zone, Claim } = require('../models');
+const { Policy, Rider, Zone, Claim, Transaction } = require('../models');
 
 // Step 7: Dynamic Premium Calculation 
 exports.getQuote = async (req, res) => {
@@ -7,21 +7,15 @@ exports.getQuote = async (req, res) => {
     if (!rider || !rider.zone) return res.status(400).json({ success: false, error: 'Rider or active zone not found.' });
 
     // Base Calculation Logic
-    const basePremium = 50; // ₹50 base
+    const basePremium = 50; 
     
-    // ISS Logic: 0 to 100. Lower ISS = Higher risk.
-    // Example: ISS of 75 -> 25% penalty subtracted from a perfect score discount.
     let issMultiplier = 1.0;
-    if (rider.issScore >= 80) issMultiplier = 0.85; // 15% discount
-    else if (rider.issScore < 50) issMultiplier = 1.20; // 20% penalty
+    if (rider.issScore >= 80) issMultiplier = 0.85; 
+    else if (rider.issScore < 50) issMultiplier = 1.20; 
 
-    // Zone Risk Logic
     const riskMultiplier = rider.zone.riskMultiplier || 1.0;
 
-    // Final Premium Quote
     const finalPremium = Math.round(basePremium * issMultiplier * riskMultiplier);
-    
-    // Coverage Amount is equal to their weekly earnings estimate
     const coverageAmount = rider.weeklyEarningsEstimate || 4000;
 
     res.status(200).json({
@@ -43,7 +37,7 @@ exports.purchasePolicy = async (req, res) => {
     await Policy.updateMany({ rider: rider._id, status: 'active' }, { status: 'expired' });
 
     const startDate = new Date();
-    const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 Days active
+    const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); 
 
     const newPolicy = await Policy.create({
       rider: rider._id,
@@ -55,13 +49,23 @@ exports.purchasePolicy = async (req, res) => {
       status: 'active'
     });
 
+    // Create Transaction Record for the premium payment
+    await Transaction.create({
+      rider: rider._id,
+      policy: newPolicy._id,
+      amount: premium,
+      type: 'PREMIUM_PAYMENT',
+      status: 'SUCCESS',
+      method: 'MOCK',
+      description: `Weekly premium for ${rider.zone ? 'active zone' : 'selected coverage'}`
+    });
+
     res.status(201).json({ success: true, data: newPolicy });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
-// Get Active Policy for Dashboard
 exports.getActivePolicy = async (req, res) => {
   try {
     const policy = await Policy.findOne({ rider: req.rider._id, status: 'active' });
