@@ -6,22 +6,29 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
+  const [role, setRole] = useState<'selection' | 'worker' | 'admin'>('selection');
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  
+  // Worker Auth State
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  
+  // Admin Auth State
+  const [adminCode, setAdminCode] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
   const { login } = useAuth();
   const router = useRouter();
 
+  // ─── Worker Handlers ───
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (phone.length !== 10) {
       setError('Please enter a valid 10-digit phone number');
       return;
     }
-
     setLoading(true);
     setError('');
 
@@ -52,7 +59,6 @@ export default function LoginPage() {
       setError('Please enter a valid 6-digit OTP');
       return;
     }
-
     setLoading(true);
     setError('');
 
@@ -82,6 +88,23 @@ export default function LoginPage() {
     }
   };
 
+  // ─── Admin Handlers ───
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    // Mock Admin Authentication for Hackathon
+    setTimeout(() => {
+      if (adminCode === 'GIGADMIN') {
+        router.push('/admin');
+      } else {
+        setError('Invalid Admin Security Code');
+        setLoading(false);
+      }
+    }, 1000);
+  };
+
   return (
     <div className="min-h-screen bg-[var(--gs-bg-primary)] text-[var(--gs-text-primary)] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
       
@@ -100,18 +123,25 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-gradient-to-br from-[var(--gs-primary)] to-[var(--gs-accent)] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[rgba(108,92,231,0.2)]">
-            <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transition-all
+            ${role === 'admin' ? 'bg-gradient-to-br from-[var(--gs-danger)] to-[var(--gs-accent)] shadow-[rgba(214,48,49,0.2)]' : 'bg-gradient-to-br from-[var(--gs-primary)] to-[var(--gs-accent)] shadow-[rgba(108,92,231,0.2)]'}`}
+          >
+            {role === 'admin' ? (
+               <span className="text-3xl font-bold text-white">A</span>
+            ) : (
+              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            )}
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">
-            {step === 'phone' ? 'Welcome Back' : 'Verify Identity'}
+            {role === 'selection' ? 'Select Portal' : role === 'admin' ? 'Admin Portal' : step === 'phone' ? 'Welcome Back' : 'Verify Identity'}
           </h1>
           <p className="text-[var(--gs-text-secondary)] text-sm">
-            {step === 'phone' 
-              ? 'Securely login to your GigShield dashboard' 
-              : `A 6-digit code has been sent to +91 ${phone}`}
+            {role === 'selection' && 'Choose your access level to continue'}
+            {role === 'admin' && 'Enter master credentials to access risk controls'}
+            {role === 'worker' && step === 'phone' && 'Securely login to your GigShield dashboard'}
+            {role === 'worker' && step === 'otp' && `A 6-digit code has been sent to +91 ${phone}`}
           </p>
         </div>
 
@@ -121,8 +151,80 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Dynamic Form */}
-        {step === 'phone' ? (
+        {/* ─── ROLE SELECTION ─── */}
+        {role === 'selection' && (
+          <div className="space-y-4">
+            <button
+              onClick={() => { setRole('worker'); setError(''); }}
+              className="w-full gs-card !p-5 flex items-center gap-4 hover:border-[var(--gs-primary)] transition-all group"
+            >
+              <div className="w-10 h-10 rounded-full bg-[rgba(108,92,231,0.1)] text-[var(--gs-primary)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                🚚
+              </div>
+              <div className="text-left flex-1">
+                <h3 className="font-bold text-white">Worker Login</h3>
+                <p className="text-xs text-[var(--gs-text-muted)]">Rider verification & policies</p>
+              </div>
+              <span className="text-[var(--gs-text-muted)] group-hover:text-white transition-colors">→</span>
+            </button>
+
+            <button
+              onClick={() => { setRole('admin'); setError(''); }}
+              className="w-full gs-card !p-5 flex items-center gap-4 hover:border-[var(--gs-danger)] transition-all group lg:border-[rgba(214,48,49,0.1)]"
+            >
+              <div className="w-10 h-10 rounded-full bg-[rgba(214,48,49,0.1)] text-[var(--gs-danger)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                🛡️
+              </div>
+              <div className="text-left flex-1">
+                <h3 className="font-bold text-white">Admin Login</h3>
+                <p className="text-xs text-[var(--gs-text-muted)]">System controls & risk analytics</p>
+              </div>
+              <span className="text-[var(--gs-text-muted)] group-hover:text-white transition-colors">→</span>
+            </button>
+          </div>
+        )}
+
+        {/* ─── ADMIN LOGIN ─── */}
+        {role === 'admin' && (
+          <form onSubmit={handleAdminLogin} className="space-y-6">
+            <div>
+              <label className="block text-xs uppercase tracking-widest font-semibold text-[var(--gs-text-muted)] mb-3">
+                Master Security Code
+              </label>
+              <input
+                type="password"
+                value={adminCode}
+                onChange={(e) => setAdminCode(e.target.value)}
+                className="w-full bg-[var(--gs-bg-primary)] border border-[var(--gs-border)] focus:border-[var(--gs-danger)] rounded-xl py-4 px-4 text-white placeholder-[var(--gs-text-muted)] focus:outline-none transition-all font-mono tracking-widest"
+                placeholder="••••••••"
+                required
+              />
+              <div className="mt-4 gs-glass !p-3 flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[var(--gs-danger)] animate-pulse" />
+                <span className="text-[10px] uppercase tracking-wider text-[var(--gs-danger)] font-bold">Demo Code: GIGADMIN</span>
+              </div>
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading || !adminCode}
+              className="w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--gs-danger)] to-[#e17055] text-white hover:shadow-[0_0_30px_rgba(214,48,49,0.3)] disabled:opacity-50"
+            >
+              {loading ? 'Authenticating...' : 'Enter Admin Console'}
+            </button>
+
+             <button
+              type="button"
+              onClick={() => { setRole('selection'); setAdminCode(''); setError(''); }}
+              className="w-full text-center text-[var(--gs-text-muted)] hover:text-white text-xs font-medium transition-colors py-2 mt-2"
+            >
+              Back to Selection
+            </button>
+          </form>
+        )}
+
+        {/* ─── WORKER LOGIN ─── */}
+        {role === 'worker' && step === 'phone' && (
           <form onSubmit={handleSendOtp} className="space-y-6">
             <div>
               <label className="block text-xs uppercase tracking-widest font-semibold text-[var(--gs-text-muted)] mb-3">
@@ -151,8 +253,18 @@ export default function LoginPage() {
             >
               {loading ? 'Sending Request...' : 'Get Magic Code'}
             </button>
+
+            <button
+              type="button"
+              onClick={() => { setRole('selection'); setPhone(''); setError(''); }}
+              className="w-full text-center text-[var(--gs-text-muted)] hover:text-white text-xs font-medium transition-colors py-2 mt-2"
+            >
+              Back to Selection
+            </button>
           </form>
-        ) : (
+        )}
+
+        {role === 'worker' && step === 'otp' && (
           <form onSubmit={handleVerifyOtp} className="space-y-6">
             <div>
               <label className="block text-xs uppercase tracking-widest font-semibold text-[var(--gs-text-muted)] mb-3">
@@ -197,7 +309,7 @@ export default function LoginPage() {
       </div>
 
       <p className="mt-10 text-[10px] text-[var(--gs-text-muted)] uppercase tracking-[0.2em] gs-animate-slide-up opacity-0 gs-delay-2 font-bold">
-        Encrypted Endpoint Secure · BLINKIT PARTNER LOGIN
+        {role === 'admin' ? 'SECURE INTERNAL ROUTING · AUTHORIZED PERSONNEL ONLY' : 'Encrypted Endpoint Secure · BLINKIT PARTNER LOGIN'}
       </p>
     </div>
   );
